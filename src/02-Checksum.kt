@@ -55,24 +55,13 @@ fun main(args: Array<String>) {
     println("Solution for challenge 1 is ${checksum(challenge)}")
 
 
-    fun checksumEvenlyDivisible(input: String): Int  {
-        var sum = 0
-        for (line in input.split('\n')) {
-
-            val numbers = line.split(' ','\t').map { it.toInt() }.sortedDescending()
-
-            for (n1 in numbers) {
-                for (n2 in numbers){
-                    if (n1 != n2  && (n1 % n2 == 0)) {
-                        sum += n1/n2
-                        break
-                    }
+    fun checksumEvenlyDivisible(input: String): Int  = input.split('\n')
+                .map { line -> line.split(' ','\t').map { it.toInt() }.sortedDescending() }
+                .sumBy {
+                    it.flatMap { n1 -> it.map { n2 -> Pair(n1,n2) }.reversed() } // generate combinations
+                            .first { (n1, n2) -> n1 != n2 && n1 % n2 == 0}
+                            .let { (n1, n2) -> n1 / n2}
                 }
-            }
-
-        }
-        return sum
-    }
 
     println()
     println("============== PART 2")
@@ -98,7 +87,7 @@ fun main(args: Array<String>) {
             "489\t732\t57\t75\t61\t797\t266\t593\t324\t475\t733\t737\t113\t68\t267\t141\n" +
             "3858\t202\t1141\t3458\t2507\t239\t199\t4400\t3713\t3980\t4170\t227\t3968\t1688\t4352\t4168"
 
-    println("Solution for challenge on part 2 is ${checksumEvenlyDivisible(challenge2)}")
+//    println("Solution for challenge on part 2 is ${checksumEvenlyDivisible(challenge2)}")
 
 
 }
